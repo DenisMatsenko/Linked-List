@@ -3,14 +3,12 @@ public class List {
     private int count = 0;
     public int Count { get { return count; } }
     public bool IsEmpty() => count == 0;
-
     private void Reset() {
         head = null;
         tail = null;
         current = null;
         count = 0;
     }
-
 
     // ? Add Node to list methods
     public void AddFirst(Object item) {
