@@ -4,6 +4,13 @@ public class List {
     public int Count { get { return count; } }
     public bool IsEmpty() => count == 0;
 
+    private void Reset() {
+        head = null;
+        tail = null;
+        current = null;
+        count = 0;
+    }
+
 
     // ? Add Node to list methods
     public void AddFirst(Object item) {
@@ -68,15 +75,113 @@ public class List {
         count++;
     }
 
+    // ? Remove Node from list methods
+    public void RemoveFirst() {
+        // ? if list is empty
+        if(IsEmpty()) {
+            return;
+        }
+        // ? if list have only one element
+        else if(Count == 1) {
+            Reset();
+        }
+        else {
+            head.Next.Prev = null;
+            if(head == current) // ? if head is current
+                current = head.Next;
+            head = head.Next;
+        }
+        count--;
+    }
+    public void RemoveLast() {
+        // ? if list is empty
+        if(IsEmpty()) 
+            return;
+        // ? if list have only one element
+        else if( Count == 1) {
+            Reset();
+        }
+        else {
+            tail.Prev.Next = null;
+            if(tail == current) // ? if tail is current
+                current = tail.Prev;
+            tail = tail.Prev;
+        }
+        count--;
+    }
+    public void RemoveNext() {
+        // ? if list is empty
+        if(IsEmpty() && current == tail) 
+            return;
+        else if(current.Next != null) {
+            current.Next = current.Next.Next; // ? set to current new next node
+            if(current.Next != null)
+                current.Next.Prev = current;
+            else
+                tail = current;
+            count--;
+        }   
+    }
+    public void RemovePrev() {
+        // ? if list is empty or current is head
+        if(IsEmpty() && current == head) 
+            return;
+        else if(current.Prev != null) {
+            current.Prev = current.Prev.Prev; // ? set to current new prev node
+            if(current.Prev != null)
+                current.Prev.Next = current;
+            else
+                head = current;
+            count--;
+        }   
+    }
+    public void RemoveCurrent() {
+        // ? if list is empty
+        if(IsEmpty()) {
+            return;
+        }
+        // ? if list have only one element
+        else if(Count == 1) {
+            Reset();
+        }
+        else if(current == head) {
+            RemoveFirst();
+        }
+        else if(current == tail) {
+            RemoveLast();
+        }
+        else {
+            current.Prev.Next = current.Next;
+            current.Next.Prev = current.Prev;
+            current = current.Next;
+            count--;
+        }
+        
+    }
 
-    //todo RemoveFirst, RemoveLast, RemovePrev, RemoveNext, RemoveCurrent 
     // ? Show list methods
+    public void ShowListData() {
+        System.Console.WriteLine("Current:" + current + " Head:" + head + " Tail:" + tail + " Count:" + count);
+    }
     public void ShowList() {
+        if(Count == 0) {
+            Global.SetConsoleColor(ConsoleColor.Red);
+            System.Console.WriteLine("List is empty");
+            Global.ResetConsoleColor();
+            return;
+        }
+
         for(Node node = head; node != null; node = node.Next) {
-            if(node != tail)
-                System.Console.Write(node.Data + " - ");
+            if(current == node)
+                Global.SetConsoleColor(ConsoleColor.Red); // ? Show current as red
+            if(node != tail) {
+                System.Console.Write(node.Data);
+                Global.ResetConsoleColor(); // ? it is necessary be here
+                System.Console.Write(" - ");
+            }
             else
                 System.Console.WriteLine(node.Data);
+            Global.ResetConsoleColor();
         }
     }
     public void ShowFirst() {
